@@ -7,7 +7,7 @@ const V = 1, MAXF = 20000, h = o => crypto.createHash('sha1').update(JSON.string
 const SRC = {
   sessions: c => Object.fromEntries(Object.values(c.sessions || {}).filter(s => s?.id).map(s => [s.id, [s.end + ':' + s.n, `${s.project || 'chat'} · ${String(s.id).slice(0, 8)}`]])),
   projects: () => Object.fromEntries(require('./projects.js').status().items.map(p => [p.id, [h([p.name, p.dir, p.exists]), p.name || base(p.dir)]])),
-  notes: () => { const K = require('./knowledge.js').where(), o = {}; let n = 0;
+  notes: () => { const K = require('./knowledge.js').where(), o = {}; let n = 0; if (!K.vault) return o; // no vault set up: nothing to check, not a failure
     for (const f of fs.readdirSync(K.vault, { recursive: true })) { if (!/\.md$/i.test(f) || /(^|[\\/])\./.test(f)) continue; if (++n > MAXF) throw new Error(`more than ${MAXF} notes, scan stopped`);
       const s = fs.statSync(path.join(K.vault, f)); o[f.replace(/\\/g, '/')] = [s.size + ':' + Math.round(s.mtimeMs), base(f).slice(0, -3)] } return o },
   graph: () => { const g = require('./knowledge.js').where().graph; if (!g || !fs.existsSync(g)) return {}; const s = fs.statSync(g); return { graph: [s.size + ':' + Math.round(s.mtimeMs), 'Graphify graph'] } },

@@ -19,6 +19,7 @@ if (st.rids && !st.sids) { writeF(F('state.pre-f6a.json'), JSON.stringify(st)); 
 
 // ---------- parsing ----------
 function walk(d, out = []) {
+  if (!fs.existsSync(d)) return out; // Claude Code hasn't run on this PC yet
   for (const e of fs.readdirSync(d, { withFileTypes: true })) {
     const p = path.join(d, e.name);
     if (e.isDirectory()) walk(p, out); else if (e.name.endsWith('.jsonl')) out.push(p);

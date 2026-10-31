@@ -83,7 +83,7 @@ $('banner').onclick = e => { if (e.target.closest('button[data-a=retry]')) poll(
 
 on((st, ev) => {
   $('banner').hidden = st.ok || st.at === 0;
-  if (!st.ok) { const b = $('banner'), t = (st.r ? `Tracker not reachable, showing data from ${st.r.at}.` : 'Tracker not reachable. Start it with: node ~/.claude/token-tracker/tracker.js serve.') + ' ' + retryText(); if (b.dataset.t !== t) { b.dataset.t = t; b.innerHTML = `${esc(t)} <button class="btn sm" type="button" data-a="retry">Retry now</button>`; } } // rebuilt only when the text changes, so a focused Retry now keeps focus
+  if (!st.ok) { const b = $('banner'), t = (st.r ? `Tracker not reachable, showing data from ${st.r.at}.` : 'Tracker not reachable. Restart NEXUS.') + ' ' + retryText(); if (b.dataset.t !== t) { b.dataset.t = t; b.innerHTML = `${esc(t)} <button class="btn sm" type="button" data-a="retry">Retry now</button>`; } } // rebuilt only when the text changes, so a focused Retry now keeps focus
   document.body.classList.toggle('stale', !st.ok && !!st.r);
   $('side-state').textContent = st.ok ? 'Tracker live · ' + location.host : 'Tracker offline';
   $('side-state').previousElementSibling.className = 'dot ' + (st.ok ? 'ok' : 'err');

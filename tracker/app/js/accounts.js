@@ -61,10 +61,10 @@ function login() {
     <button class="ac-b" data-a="l">Use NEXUS without an account</button>
     ${waitBox}
     <div class="ac-box"><ul class="ac-ck">
-      <li>Your browser opens Google's own sign-in page. NEXUS never sees your Google password.</li>
+      ${S.google === false ? '' : "<li>Your browser opens Google's own sign-in page. NEXUS never sees your Google password.</li>"}
       <li>NEXUS only keeps your name and email.</li>
       <li>Profiles and settings stay on this PC. Nothing is synced to a cloud.</li>
-      <li>The sign-in key is locked in Windows Credential Manager, never saved in a file.</li></ul></div>
+      ${S.google === false ? '' : '<li>The sign-in key is locked in Windows Credential Manager, never saved in a file.</li>'}</ul></div>
     <div class="ac-foot"><span>Other sign-in methods come later</span><button class="ac-link" data-a="p">Privacy details</button></div></div>`, 'ac-login');
   const gb = L.querySelector('[data-a=g]'); if (gb) gb.onclick = () => google(L); // no Google button when this install has no client secret
   L.querySelector('[data-a=l]').onclick = async () => { const r = await api({ op: 'local', ui: snap() }); r.res === 'ok' ? apply(r.ui) : L.querySelector('.ac-err').textContent = r.res };
