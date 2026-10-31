@@ -1,0 +1,17 @@
+[package]
+name = "nexus-setup"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+# M6a: NEXUS Setup.exe, the second program in nexus-app-dev. Same crates as the app (Cargo.lock copied from src-tauri), so no download.
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde_json = { version = "1", features = ["preserve_order"] } # M6e: settings.json keeps its key order (indexmap is already cached)
+sha2 = "0.10"
+windows-sys = { version = "0.61", features = ["Win32_UI_WindowsAndMessaging", "Win32_Storage_FileSystem", "Win32_Foundation", "Win32_Security", "Win32_System_JobObjects", "Win32_System_Threading", "Win32_System_Diagnostics_ToolHelp"] }
+# M6b folder picker (IFileOpenDialog); windows 0.62.2 is already in Cargo.lock through Tauri, no download
+windows = { version = "0.62", features = ["Win32_Foundation", "Win32_System_Com", "Win32_UI_Shell", "Win32_UI_Shell_Common"] }

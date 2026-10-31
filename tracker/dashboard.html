@@ -1,0 +1,126 @@
+<!doctype html><meta charset=utf-8><title>Token Tracker</title><meta name=viewport content="width=device-width,initial-scale=1">
+<style>
+:root{--bg:#050608;--card:#0e1014;--card2:#171a20;--fg:#f1f4f8;--mut:#8d97a5;--line:#22262e;--g:#34d399;--y:#f59e0b;--r:#f87171;--b:#60a5fa;--c1:#34d399;--c2:#2f8f6f;--c3:#1f4a3d}
+*{box-sizing:border-box}body{font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:var(--bg);color:var(--fg)}
+main{max-width:980px;margin:auto;padding:24px 16px 60px}
+h1{font-size:22px;margin:0;letter-spacing:-.3px}h2{font-size:16px;margin:0}h3{font-size:15px;margin:18px 0 6px}
+.sub{color:var(--mut);font-size:14px;margin:0 0 12px}small,.mut{color:var(--mut);font-size:13px}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pill{display:inline-block;padding:3px 11px;border-radius:999px;font-weight:650;font-size:12.5px;background:var(--card2);white-space:nowrap}
+.pill.g{color:var(--g);background:#0f2a20}.pill.y{color:var(--y);background:#2e1f08}.pill.r{color:var(--r);background:#331414}.pill.b{color:var(--b);background:#132238}
+.panel,section{background:var(--card);border:1px solid var(--line);border-radius:16px;animation:in .4s ease both}
+.panel{padding:6px 22px}.blk{padding:16px 0;border-top:1px solid var(--line)}.blk:first-child{border:0}
+section{margin:10px 0;padding:0 20px}@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px 24px}
+.stat small{display:block}.big{font-size:26px;font-weight:750;margin:2px 0 0;letter-spacing:-.4px;line-height:1.25}
+.g{color:var(--g)}.y{color:var(--y)}.r{color:var(--r)}.b{color:var(--b)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.row p{margin:6px 0 0}
+.meter{display:flex;align-items:center;gap:12px;margin:10px 0 6px}.meter .t{flex:1;height:10px;border-radius:5px;background:var(--card2);overflow:hidden}
+.meter i,.bar i{display:block;height:100%;border-radius:5px;background:var(--g);animation:grow .8s ease both;transform-origin:left}.meter.y i,.bar.y i{background:var(--y)}.meter.r i,.bar.r i{background:var(--r)}.bar.b i{background:var(--b)}
+@keyframes grow{from{transform:scaleX(0)}}.meter b{font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.ic{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--card2);font-size:14px;flex:none}
+.tip{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;background:var(--card2);color:var(--mut);font-size:11px;cursor:help;margin-left:6px;vertical-align:1px}
+.bar{display:grid;grid-template-columns:minmax(100px,230px) 1fr 80px;gap:10px;align-items:center;margin:8px 0;font-size:14px}
+.bar .t{height:9px;border-radius:5px;background:var(--card2);overflow:hidden}
+.bar span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.health{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.h,.card{background:var(--card2);border-radius:12px;padding:12px 14px}.h b{display:block}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}.card .big{font-size:20px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.cmd{font-family:ui-monospace,Consolas,monospace;background:var(--card2);padding:1px 7px;border-radius:5px;font-size:13px}
+.fix{border-left:3px solid var(--y);padding:4px 0 4px 10px;margin:8px 0}.fix small{display:block}
+.chk{background:var(--card2);border-radius:12px;padding:12px 14px;border-left:4px solid var(--g)}.chk.y{border-color:var(--y)}.chk.r{border-color:var(--r)}.chk p{margin:4px 0;font-size:13.5px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{border-bottom:1px solid var(--line);padding:7px;text-align:right;white-space:nowrap}
+th{color:var(--mut);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}td:first-child,th:first-child{text-align:left}
+.wrap{overflow-x:auto}details>summary{cursor:pointer;font-weight:600;list-style:none;padding:4px 0;color:var(--mut);font-size:13.5px}details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"▸ "}details[open]>summary::before{content:"▾ "}details[open]>summary{margin-bottom:6px}
+section>details>summary{display:flex;align-items:center;gap:10px;padding:14px 0;color:var(--fg);font-size:15px}section>details>summary::before{content:none}
+section>details>summary::after{content:"▸";color:var(--mut);margin-left:6px}section>details[open]>summary::after{content:"▾"}
+.hint{margin-left:auto;text-align:right}section>details>.fb{padding-bottom:16px}
+.key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 5px 0 12px;vertical-align:-1px}
+ul{margin:6px 0;padding-left:18px}li{margin:4px 0}.adv+.adv{margin-top:14px}
+.done *{animation:none!important}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:520px){.panel{padding:4px 16px}section{padding:0 16px}.big{font-size:22px}.stats{grid-template-columns:1fr 1fr}.hint{display:none}.bar{grid-template-columns:90px 1fr 60px}}
+</style>
+<main><div class=top><div><h1>Token Tracker</h1><small>Updated <span id=at>…</span> · auto-refresh · local, 0 Claude tokens</small></div><div id=st></div></div>
+<div id=o><p class=mut>Scanning logs…</p></div>
+<p class=mut style="margin-top:18px">Verified = proven by before/after logs. Estimated = likely, not proven. Saved tokens (especially cache reads) are not a guaranteed cut in your Claude Pro limit.</p></main>
+<script>
+const k=n=>n==null?'–':Math.abs(n)>=1e6?(n/1e6).toFixed(1)+'M':Math.abs(n)>=1e3?Math.round(n/1e3)+'k':''+Math.round(n),S=a=>a[0]+a[1]+a[2]+a[3];
+const T=t=>`<span class=tip title="${t}">?</span>`,pc=p=>p==null?'–':(p>0?'+':'')+p+'%';
+const bars=(rows,cls='')=>{const mx=Math.max(1,...rows.map(r=>r[1]));return rows.map(([n,v,t])=>`<div class="bar ${cls}"><span title="${n}">${n}</span><div class=t><i style="width:${v/mx*100}%"></i></div><span>${t??k(v)}</span></div>`).join('')};
+const card=(ic,t,v,sub,c='',tip='')=>`<div class=card><small>${ic} ${t}${tip?T(tip):''}</small><div class="big ${c}">${v}</div><small>${sub}</small></div>`;
+const stat=(t,v,sub,c='',tip='')=>`<div class=stat><small>${t}${tip?T(tip):''}</small><div class="big ${c}">${v}</div><small>${sub}</small></div>`;
+const fold=(ic,h,hint,body)=>`<section><details data-k="${h}"><summary><span class=ic>${ic}</span>${h}${hint?`<small class=hint>${hint}</small>`:''}</summary><div class=fb>${body}</div></details></section>`;
+function chart(days){const W=900,H=170,bw=W/Math.max(days.length,1),mx=Math.max(1,...days.map(d=>S(d.slice(1))));
+ return `<svg viewBox="0 0 ${W} ${H+24}" width=100% role=img aria-label="Daily tokens">`+days.map((d,i)=>{let y=H,o='';
+  for(const[v,c]of[[d[1]+d[2],'--c1'],[d[3],'--c2'],[d[4],'--c3']]){const h=v/mx*H;y-=h;o+=`<rect x=${i*bw+6} y=${y} width=${bw-12} height=${h} rx=3 fill="var(${c})"/>`}
+  return o+`<text x=${i*bw+bw/2} y=${H+18} font-size=13 text-anchor=middle fill="var(--mut)">${d[0].slice(5)}</text><title>${d[0]}: ${k(S(d.slice(1)))} total</title>`}).join('')+'</svg>'}
+const AC={continue:['g','✅'],compact:['y','🗜️'],'new chat':['r','🆕']};
+function advCard(s,one){const[c]=AC[s.action],m=s.pct>=75?'r':s.pct>=50?'y':'g';return `<div class=adv><div class=row><h2>${one?'Context Advisor':s.project}</h2><span class="pill ${c}">${s.label}</span></div>`+
+ `<div class="meter ${m}" title="Context size vs the measured auto-compact point (health: ${s.health})"><div class=t><i style="width:${Math.min(100,s.pct)}%"></i></div><b>${s.pct}%</b></div>`+
+ `<div>${s.action!='continue'?`Finish your task, then use <span class=cmd>${s.cmd}</span>. <small>Context auto-saves to Obsidian first.</small>`:s.plain}</div>`+
+ `<details data-k="adv-${s.id}"><summary>Details</summary><small>${s.project} · ${s.id.slice(0,8)} · ${s.active?'active now':'idle '+s.idle+' min'} · ${s.n} requests · ${k(s.ctx)} context · compacted ${s.k}× · ${s.rr} repeated reads</small>`+
+ (s.action!='continue'?`<p>${s.plain}</p><p><b>Why:</b> ${s.why}</p><p><b>Est. savings:</b> <span class=b>${s.save==null?'Not enough data':s.save>0?'~$'+s.save.toFixed(2):'No net saving'}</span> <small>${s.save==null?'':s.unit+' · estimate, '+s.conf+' confidence · not a guaranteed Pro usage saving'}</small></p><small>Trade-off: ${s.risk}${s.warnedAt?` · warned in chat ${new Date(s.warnedAt).toLocaleTimeString()}`:''}</small>`:'')+'</details></div>'}
+async function go(){let r;try{r=await(await fetch('/api')).json()}catch{return}if(!r.days)return;at.textContent=r.at;
+ const w=r.window,d=r.days,today=d.at(-1)||[0,0,0,0,0],wk=d.slice(-7).reduce((a,x)=>a+S(x.slice(1)),0),wt=r.issues.reduce((a,x)=>a+x[3],0),sv=r.saved,v=r.verify,sk=r.skills,a=r.advisor,sa=r.skadv;
+ const au=r.audit,NC={'Net Positive':'g','Net Negative':'r','Insufficient Data':'y'},su=r.startup;
+ const stc={improving:'g',declining:'r',stable:'y'}[r.status]||'b',help={improving:'Yes, waste is dropping',declining:'No, waste is rising',stable:'No clear change yet'}[r.status]||'Collecting data';
+ st.innerHTML=`<span class="pill ${stc}" title="Optimizer trend. Needs 5+ sessions with tips loaded. Based on estimated waste per 100k tokens vs the baseline.">${{improving:'Improving',declining:'Declining',stable:'Stable'}[r.status]||'Collecting data'}</span>`;
+ const act=a.sessions,hi=a.history||[],top=r.fixes[0];
+ const VC={Verified:['g','✅'],'Collecting Data':['y','⏳'],'Needs Attention':['r','⚠️']},ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<1?'just now':m<60?m+' min ago':Math.round(m/60)+' h ago'};
+ const sc={Keep:'g',Review:'y','Consider removing':'r'},n=s=>sa.items.filter(x=>x.status==s).length;
+ const cn=s=>au?au.counts[s]||0:0,need=cn('Needs Attention'),coll=cn('Collecting Data'),NL={'Net Positive':'Worth it','Net Negative':'Costing more','Insufficient Data':'Learning'};
+ const key=x=>x.dataset.k||x.firstElementChild.textContent.split(' (')[0],op=[...o.querySelectorAll('details[open]')].map(key);
+ o.innerHTML=(r.error?`<section style="padding:14px 20px"><b class=r>Error:</b><pre>${r.error}</pre></section>`:'')+
+ '<div class=panel><div class="blk stats">'+
+ stat('Tokens Used',w.start?k(S(w.tokens)):k(S(today.slice(1))),w.start?`Last 5 hours · resets ${w.resets}`+(w.pct!=null?` · ~${w.pct}% of limit`:''):'Today · no active window','','Measured tokens since your current 5-hour usage window started. Cache reads are included but cost far less.')+
+ stat('Verified Saved',sv.verified?k(sv.verified):'0',sv.estimated?`${sv.verified?'+':'Not proven ·'} ~${k(sv.estimated)} estimated`:'Not proven yet',sv.verified?'g':'','Verified = token amount measured in usage logs (skills with vs without, 10+ sessions each). Tip savings prove fewer problems but their size is chars ÷ 4, so they count as estimated.')+
+ (au&&au.net?stat('Optimizer',NL[au.net.status]||au.net.status,au.net.net==null?'Needs more data':`Net ${k(au.net.net)} tokens`,au.net.status=='Insufficient Data'?'':NC[au.net.status],'Savings (verified + estimated) minus the tokens the tracker adds to chats (tips, advisor text). Advisor forecasts are not counted as savings.'):stat('Optimizer',help,'',stc))+
+ stat('Issues',need,need?'Need attention (see System Health)':'No urgent problems',need?'r':'')+'</div>'+
+ '<div class=blk>'+(act.length?act.map(s=>advCard(s,act.length==1)).join(''):'<div class=row><h2>Context Advisor</h2><span class=pill>Idle</span></div><p class=mut style="margin:6px 0 0">No current chat. Start one and it shows here within seconds.</p>')+'</div>'+
+ (au?`<div class=blk><div class=row><h2>System Health</h2><span class="pill ${need?'r':'g'}">${need?need+' need attention':cn('Verified')+' verified'}</span></div><p style="margin:6px 0 0">${coll?coll+' check'+(coll>1?'s':'')+' still collecting data. ':''}${need?'Open the checks below.':'No urgent issues.'}</p>`+
+  `<details data-k="checks"><summary>All checks · last run ${ago(au.at)}</summary><div class=health>`+
+  au.checks.map(c=>`<div class="chk ${VC[c.status][0]}"><b>${VC[c.status][1]} ${c.name}</b> <small class=${VC[c.status][0]}>${c.status}</small><p>${c.detail}</p><small>${c.why} · checked ${ago(c.at)} · since ${new Date(c.since).toLocaleString()}</small></div>`).join('')+
+  '</div><small>Re-checks the tracker with local file reads every 10 min (no AI). Safe, reversible fixes are applied automatically.</small></details></div>':'')+
+ `<div class="blk row"><h2>Biggest Waste</h2><b class=${top?'y':'g'}>${top?`${top[0]} · ~${k(top[1])}`:'None found'}</b></div></div>`+
+ (au&&au.net?fold('⚖️','Is the optimizer worth it?',`${au.net.status}`,`<p class=sub>${au.net.why}</p><p><small>savings ~${k(au.net.gain)} − overhead ~${k(au.net.overTok)}${au.net.net==null?'':' = '+k(au.net.net)}</small></p>`+
+  `<h3>Savings: verified vs estimated</h3><p class=sub>Only token amounts read straight from usage logs can be verified. Cache-read tokens are cheap re-reads, not Claude Pro savings.</p><div class=wrap><table><tr><th>source<th>amount<th>type<th>unit<th>notes`+
+  au.savings.map(x=>`<tr><td>${x.src}<td>${x.amount==null?'Not enough data':(x.usd?'~$'+x.amount.toFixed(2):'~'+k(x.amount))}<td class=${x.amount==null?'mut':x.kind=='verified'?'g':'y'}>${x.amount==null?'–':x.kind}<td><small>${x.unit}</small><td style="white-space:normal"><small>${x.note}</small>`).join('')+'</table></div>'+
+  `<h3>What the optimizer adds to your chats ${T('Overhead counts only hook text the tracker injects and the warning lines Claude writes because of it. Size = chars ÷ 4.')}</h3>`+
+  (au.net.over.length?bars(au.net.over.map(x=>[`${x.what} (${x.n}×)`,x.tok,'~'+k(x.tok)])):'<p class=mut>nothing yet</p>')+
+  `<p class=mut>Building the tracker itself (${au.net.build.sessions} chats that edited it, upper bound): ~${k(au.net.build.fresh)} fresh + ${k(au.net.build.cached)} cache-read tokens. One-time cost, shown apart from running overhead.</p>`):'')+
+ fold('🔥','Waste & skills',`${r.fixes.length} problem${r.fixes.length==1?'':'s'} · ${n('Consider removing')} skill${n('Consider removing')==1?'':'s'} to review`,
+  `<div class=two><div><h3>What's wasting tokens <small>(est., last 10 sessions)</small></h3>`+(r.fixes.length?bars(r.fixes.map(([n,w])=>[n,w,'~'+k(w)]),'y')+r.fixes.map(([n,w,s,f])=>`<div class=fix><b>${n}</b><small>${s} session${s>1?'s':''} · fix: ${f}</small></div>`).join(''):'<p>No waste found 🎉</p>')+'</div>'+
+  `<div><h3>Which skills are useful <small>(recommends only)</small></h3><p>${['Keep','Review','Consider removing'].map(s=>`<span class="pill ${sc[s]}" style="margin:0 6px 6px 0">${s}: ${n(s)}</span>`).join('')}</p>`+
+  `<ul>${sa.items.slice(0,8).map(x=>`<li><b class=${sc[x.status]}>${x.status}</b> · ${x.name} <small>${x.why}</small>`).join('')}</ul><small>Full table under Advanced statistics.</small></div></div>`)+
+ fold('📅','Daily usage',`7 days: ${k(wk)}`,`<p class=sub>Today ${k(today[1]+today[2])} new + ${k(today[4])} cache reads ${T('Measured. Cache reads are cheap re-reads of the conversation so far.')}<span class=key><i style="background:var(--c1)"></i>input+output<i style="background:var(--c2)"></i>cache write<i style="background:var(--c3)"></i>cache read</span></p>`+chart(d))+
+ (su&&su.latest?fold('🚀','Startup context',`~${k(su.latest.ctx)} per new chat`,`<p class=sub><b>${k(su.latest.cached)}</b> cached (shared, cheap) + <b>${k(su.latest.fresh)}</b> new. Mostly Claude Code and plugins, not the tracker. ${T('Measured from what Claude Code logs before the first request in each chat. Startup tips add ~80 tokens.')}</p>`+
+  bars([...su.latest.parts.map(([n,v])=>[n,v,'~'+k(v)]),['Tool definitions + base prompt (not logged; total minus the rest)',su.latest.rest,'~'+k(su.latest.rest)]],'b')+
+  `<small>Latest: ${su.latest.project} · ${su.latest.id.slice(0,8)}. Parts are estimates (chars ÷ 4); the total and fresh/cached split are measured.</small><details><summary>Recent chats</summary><div class=wrap><table><tr><th>started<th>project<th>first request<th>fresh<th>cached`+
+  su.rows.map(x=>`<tr><td>${new Date(x[0]).toLocaleString()}<td>${x[1]}<td>${k(x[2])}<td>${k(x[3])}<td>${k(x[4])}`).join('')+'</table></div></details>'):'')+
+ fold('🧠','Chat history',`${hi.length} ended · auto-compact ~${k(a.win)}`,`<p class=sub>Auto-compact happens near ${k(a.win)} tokens (measured). Keep Using This Chat = fine. Compact Soon = /compact. Start a New Chat = /clear. Before either, key context is auto-saved to Obsidian.</p>`+
+  (hi.length?`<details><summary>Session history (${hi.length})</summary><p class=mut>Ended, cleared or replaced chats. No warnings are shown for these.</p><div class=wrap><table><tr><th>session<th>project<th>last used<th>requests<th>fresh<th>cached<th>compactions<th>peak context<th>why history`+hi.map(h=>`<tr><td>${h.id.slice(0,8)}<td>${h.project}<td>${new Date(h.end).toLocaleString()}<td>${h.n}<td>${k(h.fresh)}<td>${k(h.cached)}<td>${h.k}<td>${k(h.peak)}<td>${h.why}`).join('')+'</table></div></details>':'<p class=mut>No ended chats yet.</p>')+
+  (a.log.length?`<details><summary>Action history</summary><ul>${a.log.map(x=>`<li>${new Date(x[0]).toLocaleString()} · ${x[1]} · ${x[2]} → <b class=${/FAILED/.test(x[3])?'r':/verified/.test(x[3])?'g':''}>${x[3]}</b>`).join('')}</ul></details>`:''))+
+ fold('💡','Suggestions',`${r.tips.length} tips loaded · ${r.recs.length} need you`,`<p class=sub>Tips load automatically at startup. Safe, reversible fixes apply automatically. Anything that could affect quality waits for you.</p><h3>Tips loaded at startup</h3><ul>${r.tips.map(t=>`<li>${t}`).join('')||'<li>none yet'}</ul><h3>Done automatically</h3><ul>${(r.auto||[]).map(x=>`<li>${new Date(x[0]).toLocaleString()} · ${x[1]}`).join('')||'<li>nothing yet'}</ul><h3>Needs your judgment</h3><ul>${r.recs.map(t=>`<li>${t}`).join('')||'<li>nothing'}</ul>`)+
+ `<section><details data-k="Advanced statistics"><summary><span class=ic>⚙️</span>Advanced statistics<small class=hint>health · skills · sessions</small></summary><div class=fb>`+
+ `<h3>Optimizer health</h3><div class=health>${r.health.map(([n,ok,t])=>`<div class=h><b><span class=dot style="background:var(--${ok?'g':'y'})"></span>${n}</b><small>${t}</small></div>`).join('')}</div>`+
+ `<h3>Savings breakdown</h3><div class=grid>`+card('✔️','Verified savings',sv.verified?k(sv.verified):'0','proven by comparisons','g')+card('≈','Estimated savings',sv.estimated?k(sv.estimated):'Not enough data','with/without skills, not proof','b')+card('➖','Optimizer cost',k(sv.tipCost),'tip text loaded at startup')+card('🗂️','Estimated waste',k(wt),'last 10 sessions','y')+'</div>'+
+ `<h3>Before vs after</h3><p class=sub>Baseline: ${v.base} sessions · With tips: ${v.seen} sessions${v.enough?'':' · <b class=y>not enough data yet, no improvement claimed</b>'}${r.trend?` · last 10 vs previous 10: tokens/request ${pc(r.trend.tokPerReq)}, waste ${pc(r.trend.waste)}`:''}</p>`+
+  `<div class=wrap><table><tr><th>metric<th>before<th>after<th>change<th>type`+v.rows.map(x=>{const c=x[3],g=c==null?'':(c*x[5]>0?'g':c?'r':'');return`<tr><td>${x[0]}<td>${x[1].toFixed(1)}<td>${x[2]==null?'–':x[2].toFixed(1)}<td class=${g}>${pc(c)}<td class=${x[4]=='measured'?'g':'y'}>${x[4]}`}).join('')+'</table></div>'+
+  `<ul>${r.opts.map(x=>`<li><b>${x.name}</b>: ${x.status}${x.cleanAfter!=null?` · sessions free of this problem: ${x.cleanBefore}% → ${x.cleanAfter}%`:''}`).join('')}</ul>`+
+ `<h3>Skills & plugins cost</h3><p class=mut>Combined savings (any skill vs none): <b>${sk.combined.status=='Not enough data'?`Not enough data (${sk.combined.nW} with / ${sk.combined.nWo} without)`:`${sk.combined.status}, ${k(sk.combined.perSession)} output tokens/session`}</b> · total context added: ${k(sk.totalCost)} (est.)</p>`+
+  bars(sk.rows.map(x=>[x.name,x.costPerSession,k(x.costPerSession)+'/s']),'b')+
+  `<div class=wrap><table><tr><th>skill / hook<th>sessions<th>uses<th>cost/session${T('Tokens added to context per session (chars ÷ 4, estimate). Repeats after each /compact.')}<th>output/request with → without<th>savings${T('Needs 5+ sessions with AND without the skill in the same projects. Verified needs 10+ each and 25%+ less output.')}`+
+  sk.rows.map(x=>`<tr><td>${x.name}<td>${x.sessions}<td>${x.uses}<td>${k(x.costPerSession)}<td>${x.outWith!=null?`${k(x.outWith)} → ${k(x.outWithout)} (${pc(x.pct)})`:'–'}<td class=${x.status=='verified'?'g':x.status=='estimate'?'b':'mut'}>${x.status=='Not enough data'||x.status=='no saving seen'?x.status:`${x.status}: ~${k(x.perSession)}/session`}`).join('')+'</table></div>'+
+ `<h3>Skill Efficiency Advisor</h3>`+(sa.notices.length?`<div class=fix><b class=y>Notices</b><ul>${sa.notices.slice(0,5).map(x=>`<li>${new Date(x[0]).toLocaleString()} · ${x[1]}`).join('')}</ul></div>`:'')+
+  `<div class=wrap><table><tr><th>name<th>type<th>status<th>why<th>data<th>confidence<th>recommendation<th>if removed${T('Estimated context tokens saved per session if removed. Not a recommendation by itself.')}`+
+  sa.items.map(x=>`<tr><td>${x.name}${x.version?` <small class=mut>${x.version}</small>`:''}<td><small>${x.type}${x.enabled===false?' (disabled)':''}</small><td class=${sc[x.status]}>${x.status}<td><small>${x.why}</small><td><small>${x.sessions} sessions · ${x.cost?k(x.cost)+'/s':'–'} · ${x.compare}</small><td>${x.conf}<td class=${x.expensive?'y':''}>${x.rec}<td>${x.removeSave?'~'+k(x.removeSave)+'/s (est.)':'Not enough data'}`).join('')+'</table></div>'+
+  `<details><summary>Install / update / remove history</summary><ul>${sa.changes.map(x=>`<li>${new Date(x[0]).toLocaleString()} · <b>${x[1]}</b> ${x[2]}`).join('')||'<li>No changes since tracking started.'}</ul></details>`+
+ `<div class=two><div><h3>By model</h3>${bars(r.models.map(x=>[x[0],S(x.slice(1))]))}</div><div><h3>By project</h3>${bars(r.projects.map(x=>[x[0],S(x.slice(1))]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]))}</div></div>`+
+ `<h3>Recent sessions</h3>${bars(r.sessions.slice(0,8).map(x=>[`${x[1]} · ${x[2]}`,S(x.slice(4,8))]))}`+
+ `<div class=wrap><table><tr><th>session<th>project<th>start<th>requests<th>input<th>output<th>cache write<th>cache read<th>est. waste<th>top issue`+
+ r.sessions.map(x=>'<tr>'+x.map((v,i)=>`<td>${i>2&&i<9?k(v):v}`).join('')).join('')+'</table><br><table><tr><th>day<th>input<th>output<th>cache write<th>cache read'+d.map(x=>'<tr>'+x.map((v,i)=>`<td>${i?k(v):v}`).join('')).join('')+'</table></div></div></details></section>';
+ o.querySelectorAll('details').forEach(x=>{if(op.includes(key(x)))x.open=true})}
+go().then(()=>setTimeout(()=>o.classList.add("done"),1500));setInterval(go,10000)
+</script>

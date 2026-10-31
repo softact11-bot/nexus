@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>NEXUS</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; height: 100vh; display: grid; place-items: center; background: #050806; color: #cfe9d8; font: 15px/1.5 "Segoe UI", system-ui, sans-serif; }
+  .box { text-align: center; max-width: 520px; padding: 0 16px; }
+  .ring { width: 54px; height: 54px; margin: 0 auto 18px; border-radius: 50%; border: 3px solid #12301f; border-top-color: #2bd67b; animation: s 1s linear infinite; }
+  h1 { font-size: 20px; letter-spacing: .12em; margin: 0 0 6px; color: #2bd67b; }
+  p { margin: 0; color: #8fb39d; }
+  .err .ring { animation: none; border-color: #4a1d1d; border-top-color: #e5484d; }
+  .err p { color: #f1b0b2; }
+  .act { display: none; margin-top: 16px; gap: 10px; justify-content: center; }
+  .man .act { display: flex; }
+  button { font: inherit; padding: 6px 14px; border-radius: 6px; border: 1px solid #2bd67b; background: #0c1a12; color: #cfe9d8; cursor: pointer; }
+  button:hover, button:focus-visible { background: #12301f; }
+  @keyframes s { to { transform: rotate(360deg); } }
+</style>
+<div class="box" id="b"><div class="ring"></div><h1>NEXUS</h1><p id="m">Connecting to the local tracker…</p>
+  <div class="act"><button onclick="location.href='/nexus-retry'">Try again</button><button onclick="location.href='/nexus-log'">Open guard.log</button></div></div>
+<script>window.nexusStatus = (m, s) => { document.getElementById('b').className = 'box'; document.getElementById('m').textContent = m + (s >= 1 ? ' ' + s + ' s' : '') + (s >= 10 ? '. After a long break the first scan can take up to a minute.' : ''); };
+window.nexusManual = m => { nexusError(m); document.getElementById('b').className = 'box err man'; };
+window.nexusError = m => { document.getElementById('b').className = 'box err'; document.getElementById('m').textContent = m; };</script>
+</html>

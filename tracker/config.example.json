@@ -1,0 +1,9 @@
+{
+ "fiveHourLimitTokens": null,
+ "oversizedChars": 30000,
+ "rebuildMinTokens": 20000,
+ "vaultNote": null,
+ "kbDir": null,
+ "learnDir": null,
+ "syncScript": null
+}

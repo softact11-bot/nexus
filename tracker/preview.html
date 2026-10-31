@@ -1,0 +1,137 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Claude Code Command Center</title>
+<!-- M4 preview (not approved yet). Served at http://127.0.0.1:7788/preview; reads the same /api as dashboard.html. dashboard.html is unchanged. -->
+<link rel=preconnect href=https://fonts.googleapis.com><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel=stylesheet>
+<style>
+:root{--bg:#03070f;--bg2:#06101e;--line:rgba(90,170,255,.14);--line2:rgba(90,170,255,.3);--tx:#d8e8ff;--mut:#6f88aa;--dim:#3d5170;--ac:#3fa9ff;--ac2:#8fd3ff;--g:#4fe3a6;--y:#ffc861;--r:#ff6b7d;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace;--disp:'Barlow Condensed','Segoe UI',sans-serif}
+*{box-sizing:border-box;margin:0}html,body{height:100%}
+body{min-width:1100px;background:radial-gradient(ellipse 60% 55% at 50% 45%,#0a1f3d 0%,var(--bg) 70%);color:var(--tx);font:13px/1.5 var(--mono);overflow:hidden;letter-spacing:.02em}
+body:before{content:"";position:fixed;inset:auto 0 0;height:32vh;background:linear-gradient(transparent,rgba(30,90,170,.07)),repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 64px),repeating-linear-gradient(0deg,var(--line) 0 1px,transparent 1px 64px);-webkit-mask:linear-gradient(transparent,#000 70%);mask:linear-gradient(transparent,#000 70%);transform:perspective(500px) rotateX(58deg);transform-origin:bottom;pointer-events:none;opacity:.55}
+#core{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.app{position:relative;display:grid;grid-template:auto 1fr auto/250px 1fr 330px;gap:0 28px;height:100%;padding:22px 28px}
+header{grid-column:1/-1;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.brand b{display:block;font:300 26px/1 var(--disp);letter-spacing:.32em}.brand small{color:var(--mut);font-size:10px;letter-spacing:.3em}
+.clock{text-align:right}.clock b{font:200 40px/1 var(--disp);letter-spacing:.06em}.clock b i{font-style:normal;color:var(--ac)}.clock small{display:block;color:var(--mut);font-size:10px;letter-spacing:.3em;margin-top:4px}
+.status{display:flex;gap:18px;font-size:10px;letter-spacing:.24em;color:var(--mut);padding-top:6px}.status span:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--dim);margin-right:8px;vertical-align:1px}
+.status .on{color:var(--ac2)}.status .on:before{background:var(--ac);box-shadow:0 0 8px var(--ac)}
+.col{display:flex;flex-direction:column;gap:22px;min-height:0;overflow:auto;scrollbar-width:none;padding-bottom:8px}.col::-webkit-scrollbar{display:none}
+h3{font:400 10px var(--mono);letter-spacing:.28em;color:var(--mut);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+h3 em{font-style:normal;color:var(--dim);letter-spacing:.1em}
+.big{font:200 44px/1 var(--disp);letter-spacing:.02em}.big small{font-size:18px;color:var(--mut);margin-left:6px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:12px}.kv span{color:var(--mut)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}.split div span{display:block;font-size:10px;color:var(--mut);letter-spacing:.14em}.split div b{font:300 24px/1.1 var(--disp)}
+.bar{height:3px;background:var(--line);margin-top:12px;display:flex;overflow:hidden}.bar i{display:block;height:100%}
+.leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10px;color:var(--mut);margin-top:8px}.leg i{display:inline-block;width:7px;height:7px;margin-right:5px}
+.ok{color:var(--g)}.warn{color:var(--y)}.bad{color:var(--r)}.acc{color:var(--ac2)}
+.list{display:flex;flex-direction:column;gap:9px;font-size:12px}.list div{display:flex;gap:10px;align-items:baseline}.list div b{font-weight:400;flex:1}.list small{color:var(--mut);font-size:10px}
+.dot{width:6px;height:6px;border-radius:50%;flex:none;background:var(--g);box-shadow:0 0 6px currentColor;transform:translateY(-1px)}.dot.y{background:var(--y)}.dot.r{background:var(--r)}
+nav{display:flex;flex-direction:column;gap:2px}
+nav button{all:unset;cursor:pointer;padding:9px 12px;font-size:11px;letter-spacing:.2em;color:var(--mut);text-transform:uppercase;border-left:1px solid transparent;transition:.25s}
+nav button:hover{color:var(--tx)}nav button[aria-current=true]{color:var(--ac2);border-color:var(--ac);background:linear-gradient(90deg,rgba(63,169,255,.1),transparent)}
+nav button:focus-visible,.modes button:focus-visible{outline:1px solid var(--ac);outline-offset:2px}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:0;position:relative}
+.title{text-align:center;pointer-events:none;margin-bottom:18px}.title b{display:block;font:200 clamp(44px,6vw,84px)/1 var(--disp);letter-spacing:.42em;margin-right:-.42em;text-shadow:0 0 30px rgba(63,169,255,.45)}
+.title small{color:var(--mut);font-size:11px;letter-spacing:.32em}
+.modes{display:flex;gap:6px;margin-bottom:6px}.modes button{all:unset;cursor:pointer;padding:7px 14px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line);border-radius:3px;transition:.25s}
+.modes button:hover{color:var(--tx);border-color:var(--line2)}.modes button[aria-pressed=true]{color:var(--tx);border-color:var(--ac);background:rgba(63,169,255,.12);box-shadow:0 0 16px rgba(63,169,255,.25)}
+.state{font-size:10px;letter-spacing:.24em;color:var(--mut);margin-bottom:4px}.state b{color:var(--ac2);font-weight:400}
+.view{position:absolute;inset:0 0 150px;overflow:auto;padding:4px 6px;background:rgba(3,7,15,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:4px;opacity:0;pointer-events:none;transform:translateY(8px);transition:.35s;scrollbar-width:thin;scrollbar-color:var(--dim) transparent}
+.view.show{opacity:1;pointer-events:auto;transform:none}.view .in{padding:18px 20px}
+table{width:100%;border-collapse:collapse;font-size:11px}th{text-align:left;font-weight:400;color:var(--mut);letter-spacing:.14em;font-size:10px;padding:6px 8px;border-bottom:1px solid var(--line)}td{padding:7px 8px;border-bottom:1px solid rgba(90,170,255,.06);white-space:nowrap}td.n,th.n{text-align:right}
+.chart{display:flex;align-items:flex-end;gap:10px;height:180px;margin:10px 0 6px}.chart div{flex:1;display:flex;flex-direction:column-reverse;height:100%;position:relative}.chart i{display:block;min-height:1px}.chart small{position:absolute;bottom:-18px;left:0;right:0;text-align:center;color:var(--mut);font-size:9px}
+.card{border:1px solid var(--line);border-radius:4px;padding:14px 16px;margin-bottom:14px}.card p{color:var(--mut);font-size:11px;margin-top:6px}
+footer{grid-column:1/-1;display:flex;justify-content:space-between;color:var(--dim);font-size:10px;letter-spacing:.2em;padding-top:12px}
+.spark{width:100%;height:46px;margin-top:10px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<canvas id=core aria-hidden=true></canvas>
+<div class=app>
+<header><div class=brand><b>CLAUDE CODE</b><small>COMMAND CENTER · PREVIEW</small></div>
+<div class=status id=conn><span id=s-trk>TRACKER</span><span id=s-obs>OBSIDIAN</span><span id=s-gra>GRAPHIFY</span></div>
+<div class=clock><b id=clk>--:--</b><small id=date></small></div></header>
+
+<div class=col>
+<nav aria-label=Views>
+<button data-v=core aria-current=true>Core</button><button data-v=sessions>Sessions</button><button data-v=analytics>Analytics</button><button data-v=optimize>Optimization</button><button data-v=health>System</button>
+</nav>
+<section><h3>Live usage <em id=win>5 h</em></h3><div class=big id=u-tot>–</div><div class=bar id=u-bar></div>
+<div class=leg><span><i style="background:var(--ac2)"></i>input+output</span><span><i style="background:#7a5cff"></i>cache write</span><span><i style="background:var(--ac)"></i>cache read</span></div>
+<svg class=spark id=spark preserveAspectRatio=none viewBox="0 0 100 40"></svg></section>
+<section><h3>Current session</h3><div class=kv id=sess><span>Waiting for data…</span></div></section>
+</div>
+
+<main class=center>
+<div class=title><b>CLAUDE</b><small>YOUR AI DEVELOPMENT COMMAND CENTER</small></div>
+<div class=state>CORE · <b id=st-name>IDLE</b> · <span id=st-why>auto</span></div>
+<div class=modes role=group aria-label="Core state">
+<button data-m=auto aria-pressed=true>Auto</button><button data-m=idle>Idle</button><button data-m=working>Working</button><button data-m=optimizing>Optimizing</button><button data-m=saving>Saving</button></div>
+<div class=view id=v-sessions><div class=in><h3>Recent sessions <em>measured</em></h3><table id=t-sess></table></div></div>
+<div class=view id=v-analytics><div class=in><h3>Daily tokens <em>measured</em></h3><div class=chart id=chart></div><br><div class=leg><span><i style="background:var(--ac2)"></i>input+output</span><span><i style="background:#7a5cff"></i>cache write</span><span><i style="background:var(--ac)"></i>cache read</span></div><br><h3>By project</h3><div class=list id=proj></div></div></div>
+<div class=view id=v-optimize><div class=in><div id=opt></div></div></div>
+<div class=view id=v-health><div class=in><h3>Health checks</h3><div class=list id=checks></div><br><h3>Activity</h3><div class=list id=act2></div></div></div>
+</main>
+
+<div class=col>
+<section><h3>Token statistics <em>today</em></h3><div class=split id=today></div></section>
+<section><h3>Optimization savings</h3><div class=split id=save></div><p id=save-note style="color:var(--mut);font-size:10px;margin-top:10px"></p></section>
+<section><h3>Context advisor</h3><div id=adv style="font-size:12px;color:var(--mut)">No active chat.</div></section>
+<section><h3>Live activity</h3><div class=list id=act></div></section>
+</div>
+<footer><span id=upd>CONNECTING…</span><span>LOCAL ONLY · 127.0.0.1:7788 · NO AI CALLS</span></footer>
+</div>
+<script>
+const $=id=>document.getElementById(id),k=n=>n==null?'–':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(n>=1e8?0:1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':''+Math.round(n),S=a=>a.reduce((x,y)=>x+y,0),T=t=>new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),E=s=>String(s).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';');
+const COL=['var(--ac2)','#7a5cff','var(--ac)'],M3={base:'2026-10-14T09:18Z',ctx:'161K',cr:'158K',out:'938',cw:'3K',single:'80%',img:'9.9'};
+let R=null,mode='auto',auto='idle',hist=[];
+// ---- clock
+const tick=()=>{const d=new Date();$('clk').innerHTML=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'<i>:'+String(d.getSeconds()).padStart(2,'0')+'</i>';$('date').textContent=d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric',year:'numeric'}).toUpperCase()};tick();setInterval(tick,1000);
+// ---- views
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-current',x==b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('show',v.id=='v-'+b.dataset.v))});
+document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('.modes button').forEach(x=>x.setAttribute('aria-pressed',x==b));label()});
+const label=()=>{const m=mode=='auto'?auto:mode;$('st-name').textContent=m.toUpperCase();$('st-why').textContent=mode=='auto'?'auto · from tracker':'manual'};
+const split=a=>[a[0]+a[1],a[2],a[3]],bar=(el,a)=>{const t=S(a)||1;el.innerHTML=a.map((v,i)=>`<i style="width:${v/t*100}%;background:${COL[i]}"></i>`).join('')};
+// ---- data
+async function go(){let r;try{r=await(await fetch('/api',{cache:'no-store'})).json()}catch{$('upd').textContent='TRACKER OFFLINE';$('s-trk').className='';return}if(!r.days)return;R=r;
+ const w=r.window,t=w.tokens||[0,0,0,0],tot=S(t),a=r.advisor||{},s=(a.sessions||[])[0],h=Object.fromEntries((r.health||[]).map(x=>[x[0],x]));
+ $('s-trk').className='on';$('s-obs').className=h['Obsidian sync']&&h['Obsidian sync'][1]?'on':'';$('s-gra').className=r.error?'':'on';
+ $('u-tot').innerHTML=w.start?`${k(tot)}<small>${w.pct!=null?w.pct+'% of limit':'since '+w.start}</small>`:'–';$('win').textContent=w.start?'resets '+w.resets:'no window';bar($('u-bar'),split(t));
+ hist.push(tot);hist=hist.slice(-60);const mx=Math.max(...hist),mn=Math.min(...hist),pts=hist.map((v,i)=>`${hist.length>1?i/(hist.length-1)*100:100},${38-(mx>mn?(v-mn)/(mx-mn)*34:17)}`).join(' ');
+ $('spark').innerHTML=`<polyline points="${pts}" fill=none stroke="#3fa9ff" stroke-width=1 vector-effect=non-scaling-stroke opacity=.8 />`;
+ const x=r.sessions[0];$('sess').innerHTML=x?`<span>Project</span><b>${E(x[1])}</b><span>Started</span><b>${E(String(x[2]).split(', ')[1]||x[2])}</b><span>Requests</span><b>${x[3]}</b><span>Output</span><b>${k(x[5])}</b><span>Cache read</span><b>${k(x[7])}</b><span>Context</span><b>${s?k(s.ctx):'–'}</b>`:'<span>No session yet</span>';
+ const d=r.days.at(-1)||[0,0,0,0,0];$('today').innerHTML=[['Input',d[1]],['Output',d[2]],['Cache write',d[3]],['Cache read',d[4]]].map(([n,v])=>`<div><span>${n.toUpperCase()}</span><b>${k(v)}</b></div>`).join('');
+ const sv=r.saved||{},net=r.audit&&r.audit.net;$('save').innerHTML=`<div><span>VERIFIED</span><b class=ok>${k(sv.verified||0)}</b></div><div><span>ESTIMATED</span><b class=acc>~${k(sv.estimated||0)}</b></div><div><span>OPTIMIZER</span><b>${net?E(net.status):'–'}</b></div><div><span>M3 RULES</span><b class=warn>Collecting</b></div>`;
+ $('save-note').textContent='Verified = measured in usage logs. M3 rules A, B, E: savings unverified until ~1,000 requests after the baseline.';
+ $('adv').innerHTML=s?`<div style="display:flex;justify-content:space-between;color:var(--tx)"><b style="font-weight:400">${E(s.label)}</b><span class=${s.pct>=75?'bad':s.pct>=50?'warn':'ok'}>${s.pct}%</span></div><div class=bar><i style="width:${Math.min(100,s.pct)}%;background:${s.pct>=75?'var(--r)':s.pct>=50?'var(--y)':'var(--g)'}"></i></div><p style="margin-top:10px">${s.action!='continue'?`Finish the task, then type <b class=acc>${E(s.cmd)}</b>. Context auto-saves to Obsidian first.`:E(s.plain)}</p>`:'No active chat.';
+ const feed=[...(a.log||[]).map(x=>[x[0],x[2],x[3]]),...(r.auto||[]).map(x=>[x[0],'Optimizer',x[1]])].sort((p,q)=>q[0]-p[0]).slice(0,7).map(x=>`<div><small>${T(x[0])}</small><b>${E(x[1])} <small>${E(x[2])}</small></b></div>`).join('')||'<div><small>No activity yet</small></div>';
+ $('act').innerHTML=feed;$('act2').innerHTML=feed;
+ $('t-sess').innerHTML='<tr><th>Session<th>Project<th>Start<th class=n>Requests<th class=n>Output<th class=n>Cache write<th class=n>Cache read<th>Top issue'+r.sessions.map(x=>`<tr><td>${E(x[0])}<td>${E(x[1])}<td>${E(x[2])}<td class=n>${x[3]}<td class=n>${k(x[5])}<td class=n>${k(x[6])}<td class=n>${k(x[7])}<td>${E(x[9]||'–')}`).join('');
+ const dm=Math.max(...r.days.map(x=>S(x.slice(1))));$('chart').innerHTML=r.days.map(x=>`<div title="${x[0]}: ${k(S(x.slice(1)))}">${split(x.slice(1)).map((v,i)=>`<i style="height:${v/dm*100}%;background:${COL[i]}"></i>`).join('')}<small>${x[0].slice(5)}</small></div>`).join('');
+ const pr=r.projects.map(x=>[x[0],S(x.slice(1))]).filter(x=>x[1]).sort((p,q)=>q[1]-p[1]),pm=pr[0]?pr[0][1]:1;$('proj').innerHTML=pr.map(([n,v])=>`<div><b>${E(n)}</b><small>${k(v)}</small></div><div class=bar style="margin:0"><i style="width:${v/pm*100}%;background:var(--ac)"></i></div>`).join('');
+ $('opt').innerHTML=`<h3>M3 token rules <em>approved · savings unverified</em></h3><div class=card><div class=split><div><span>BASELINE CONTEXT / REQ</span><b>${M3.ctx}</b></div><div><span>CACHE READ / REQ</span><b>${M3.cr}</b></div><div><span>OUTPUT / REQ</span><b>${M3.out}</b></div><div><span>SINGLE-CALL REQUESTS</span><b>${M3.single}</b></div></div><p>A batch tool calls · B no re-invoked active skills · E fewer screenshots (baseline ${M3.img} per 100 requests). After ~1,000 requests past ${M3.base}, run the Verify line in Project Docs §5. Only measured changes count as verified.</p></div>`+
+  `<h3>Biggest waste <em>estimate, last 10 sessions</em></h3><div class=list>${r.fixes.map(f=>`<div><span class="dot y"></span><b>${E(f[0])} <small>${E(f[3])}</small></b><small>~${k(f[1])}</small></div>`).join('')||'<div><small>None found</small></div>'}</div><br>`+
+  `<h3>Recommendations</h3><div class=list>${r.recs.map(x=>`<div><span class=dot></span><b>${E(x)}</b></div>`).join('')||'<div><small>None</small></div>'}</div>`;
+ $('checks').innerHTML=(r.health||[]).map(x=>`<div><span class="dot ${x[1]?'':'y'}"></span><b>${E(x[0])}</b><small>${E(x[2])}</small></div>`).join('')+(r.audit?(r.audit.checks||[]).map(c=>`<div><span class="dot ${c.status=='Verified'?'':c.status=='Needs Attention'?'r':'y'}"></span><b>${E(c.name)}</b><small>${E(c.status)}</small></div>`).join(''):'');
+ auto=s&&s.active&&s.idle<2?(s.action=='continue'?'working':'optimizing'):'idle';label();$('upd').textContent='UPDATED '+T(Date.now())+' · '+E(r.at)}
+go();setInterval(go,10000);
+
+// ---- particle core (2D canvas, precomputed sphere + edges; pauses when hidden)
+const cv=$('core'),cx=cv.getContext('2d'),N=820,P=[],L=[],red=matchMedia('(prefers-reduced-motion:reduce)').matches;
+for(let i=0;i<N;i++){const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),t=i*2.399963,j=Math.random()<.72?.9+Math.random()*.12:Math.sqrt(Math.random())*.86;P.push([Math.cos(t)*r*j,y*j,Math.sin(t)*r*j,Math.random()])}
+for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const a=P[i],b=P[j],d=(a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2;if(d<.022&&L.length<N*2.4)L.push([i,j])}
+const RING=Array.from({length:3},(_,i)=>({tilt:.35+i*.32,rot:i*1.1,r:1.28+i*.12}));
+const ST={idle:{sp:.12,gl:.55,pulse:0},working:{sp:.32,gl:.85,pulse:.6},optimizing:{sp:.22,gl:.75,pulse:.3,swirl:1},saving:{sp:.18,gl:.95,pulse:1}};
+let W,H,DPR,cur={sp:.12,gl:.55,pulse:0,swirl:0},ang=0,last=performance.now(),ph=0;
+const size=()=>{DPR=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0)};addEventListener('resize',size);size();
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;const tg=ST[mode=='auto'?auto:mode];for(const q of ['sp','gl','pulse'])cur[q]+=(tg[q]-cur[q])*dt*2;cur.swirl+=((tg.swirl||0)-cur.swirl)*dt*2;
+ ang+=dt*cur.sp*(red?.2:1);ph+=dt;cx.clearRect(0,0,W,H);
+ const cX=W/2,cY=H*.41,R0=Math.min(W*.24,H*.31)*(1+Math.sin(ph*2.2)*.012*cur.pulse),ca=Math.cos(ang),sa=Math.sin(ang),tl=.32,ct=Math.cos(tl),stl=Math.sin(tl);
+ const g=cx.createRadialGradient(cX,cY,0,cX,cY,R0*1.4);g.addColorStop(0,`rgba(150,215,255,${.55*cur.gl})`);g.addColorStop(.18,`rgba(60,160,255,${.28*cur.gl})`);g.addColorStop(.55,`rgba(30,100,220,${.1*cur.gl})`);g.addColorStop(1,'rgba(0,0,0,0)');cx.fillStyle=g;cx.fillRect(cX-R0*1.5,cY-R0*1.5,R0*3,R0*3);
+ const S2=P.map(p=>{let x=p[0]*ca-p[2]*sa,z=p[0]*sa+p[2]*ca,y=p[1];if(cur.swirl>.01){const s=Math.sin(ph*1.5+p[3]*6)*.06*cur.swirl;x+=s*y;}const y2=y*ct-z*stl,z2=y*stl+z*ct,f=2.6/(2.6+z2);return[cX+x*R0*f,cY+y2*R0*f,z2,p[3]]});
+ cx.lineWidth=.6;for(const[i,j]of L){const a=S2[i],b=S2[j],dp=(2-(a[2]+b[2]))/4;cx.strokeStyle=`rgba(90,180,255,${.06+.32*dp*cur.gl})`;cx.beginPath();cx.moveTo(a[0],a[1]);cx.lineTo(b[0],b[1]);cx.stroke()}
+ cx.globalCompositeOperation='lighter';for(const p of S2){const dp=(1-p[2])/2,tw=.6+.4*Math.sin(ph*3+p[3]*40),r=(.7+dp*1.5)*(p[3]>.93?1.8:1);cx.fillStyle=`rgba(${p[3]>.93?'210,240,255':'90,185,255'},${Math.min(1,(.4+.9*dp)*tw*cur.gl)})`;cx.beginPath();cx.arc(p[0],p[1],r,0,6.283);cx.fill()}
+ if(cur.pulse>.05){const pr=(ph*.6%1);cx.strokeStyle=`rgba(120,200,255,${(1-pr)*.35*cur.pulse})`;cx.lineWidth=1.2;cx.beginPath();cx.arc(cX,cY,R0*(1+pr*.6),0,6.283);cx.stroke()}
+ cx.lineWidth=.8;for(const rg of RING){cx.strokeStyle=`rgba(80,170,255,${.16*cur.gl})`;cx.save();cx.translate(cX,cY);cx.rotate(rg.rot+ang*.15);cx.scale(1,Math.sin(rg.tilt));cx.beginPath();cx.arc(0,0,R0*rg.r,0,6.283);cx.restore();cx.stroke();
+  const t=ang*1.6+rg.rot*2,px=Math.cos(t)*R0*rg.r,py=Math.sin(t)*R0*rg.r*Math.sin(rg.tilt),rr=rg.rot+ang*.15;cx.fillStyle=`rgba(170,225,255,${.8*cur.gl})`;cx.beginPath();cx.arc(cX+px*Math.cos(rr)-py*Math.sin(rr),cY+px*Math.sin(rr)+py*Math.cos(rr),1.8,0,6.283);cx.fill()}
+ cx.globalCompositeOperation='source-over';requestAnimationFrame(frame)} // browsers pause rAF in hidden tabs: no cost when not visible
+requestAnimationFrame(frame);
+</script></body></html>

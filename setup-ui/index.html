@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXUS Setup</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="fonts/orbitron-800.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/setup-preview.css">
+</head>
+<!-- M0: design preview of NEXUS Setup.exe. Nothing is installed, changed or deleted; detection is read-only (GET /api/setup/detect). -->
+<body>
+<div class="pv-bar" role="toolbar" aria-label="Preview controls">
+  <span class="pv-tag"><i></i>SETUP PREVIEW · nothing is installed, changed or deleted</span>
+  <div class="pv-seg" id="scen" role="radiogroup" aria-label="Scenario">
+    <button data-s="this" role="radio">Install · this PC <small>real detection</small></button>
+    <button data-s="new" role="radio">Install · new PC <small>simulated</small></button>
+    <button data-s="mthis" role="radio">Maintenance · this PC <small>real detection</small></button>
+    <button data-s="mnew" role="radio">Maintenance · new layout <small>simulated</small></button>
+  </div>
+  <label class="pv-sw"><input type="checkbox" id="fail"><span></span>Simulate a failure</label>
+  <button class="pv-btn" id="redetect" title="Run the read-only detection again">Re-detect</button>
+</div>
+<div class="setup-bg" id="setup-bg" aria-hidden="true"></div>
+<div class="stage">
+  <div class="win" id="win" role="dialog" aria-label="NEXUS Setup">
+    <div class="win-glow" aria-hidden="true"></div>
+    <header class="tb">
+      <span class="emb sm" aria-hidden="true"></span>
+      <b>NEXUS Setup</b><span class="chip" id="ver">1.0.0</span>
+      <span class="tb-sp"></span>
+      <span class="tb-ctl" aria-hidden="true"><i></i><i class="x"></i></span>
+    </header>
+    <aside class="rail"><ol id="steps"></ol><div class="rail-foot" id="railfoot"></div></aside>
+    <main class="body" id="body" aria-live="polite"></main>
+    <footer class="ft" id="ft"></footer>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script type="module">
+// M6a: real Setup shell (nexus-app-dev/setup). Shows the build id + test root; the screens below are still the M0 simulation (real steps: M6b-M6e)
+const inv = window.__TAURI__?.core?.invoke;
+if (inv) inv('setup_info').then(i => { document.querySelector('.pv-tag').replaceChildren(document.createElement('i'), 'NEXUS SETUP ' + i.id.split(';')[0] + ' · TEST ROOT ' + i.root + ' · this-PC install, update, repair, uninstall = real (journaled)'); document.querySelector('#ver').textContent = i.id.split(';')[0]; inv('setup_ready');
+  if (i.openRun) recover() });
+// M6b: an unfinished run (crash / power loss) must be resumed or rolled back before anything else; nothing is guessed
+function recover() {
+  const bar = document.querySelector('.pv-bar'), box = document.createElement('span'), msg = document.createElement('b');
+  msg.textContent = 'An unfinished Setup run was found.'; box.className = 'pv-tag'; box.append(msg);
+  for (const [act, label] of [['resume', 'Resume'], ['rollback', 'Roll back']]) { const b = document.createElement('button'); b.className = 'pv-btn'; b.textContent = label;
+    b.onclick = () => inv('run_action', { act }).then(r => { msg.textContent = r.ok ? (act === 'resume' ? 'Run resumed and finished.' : 'Run rolled back.') : r.error; if (r.ok) box.querySelectorAll('button').forEach(x => x.remove()) }); box.append(b) }
+  bar.append(box);
+}
+</script>
+<script type="module" src="js/setup-preview.js"></script>
+</body>
+</html>

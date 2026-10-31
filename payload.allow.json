@@ -1,0 +1,15 @@
+{
+ "about": "M7a strict payload allowlist: the only files a NEXUS release package may contain (paths inside the package). Anything else fails leakscan.js. Personal config, keys, state, logs, backups and tests are never shipped.",
+ "allow": [
+  "nexus.exe",
+  "tracker/tracker.js", "tracker/redact.js", "tracker/backup.js", "tracker/safepath.js", "tracker/recover.js",
+  "tracker/local.js", "tracker/port.js", "tracker/launch.js", "tracker/sys.js", "tracker/setup.js", "tracker/inv.js", "tracker/projects.js",
+  "tracker/config.js", "tracker/cc.js", "tracker/knowledge.js", "tracker/syncview.js", "tracker/sync.js", "tracker/graph.js", "tracker/auto.js",
+  "tracker/accounts.js", "tracker/keyring.ps1", "tracker/assist.js", "tracker/brain.js", "tracker/watch.js", "tracker/voice.js", "tracker/voice.ps1", "tracker/scan.js", "tracker/savings.js",
+  "tracker/catalog.js", "tracker/pluginops.js",
+  "tracker/dashboard.html", "tracker/tips.txt", "tracker/config.example.json",
+  "tracker/app/*.html", "tracker/app/css/*.css", "tracker/app/fonts/*", "tracker/app/img/*", "tracker/app/js/*.js", "tracker/app/js/bg/*.js", "tracker/app/js/core/*.js", "tracker/app/js/pages/*.js",
+  "tracker/app/vendor/**"
+ ],
+ "deny": ["**/*.bak*", "**/test-*", "**/*.map", "**/*.log"]
+}

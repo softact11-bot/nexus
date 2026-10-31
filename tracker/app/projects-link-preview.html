@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/preview/">
+<title>Project link preview · NEXUS</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/themes.css">
+<style>
+body { min-height: 100vh; padding: 24px; }
+.lk-top { max-width: 760px; margin: 0 auto 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.lk-top h1 { font-family: var(--font-display, Orbitron); font-size: 18px; margin: 0 auto 0 0; letter-spacing: .04em; }
+.lk-sec { min-width: 0; border: 1px solid var(--line-2); border-radius: 12px; padding: 14px; display: grid; gap: 12px; }
+.lk-sec > h3 { margin: 0; font-size: var(--fs-s); display: flex; gap: 8px; align-items: center; }
+.lk-vaults { display: grid; gap: 6px; }
+.pj-form label.lk-v { flex-direction: row; min-width: 0; color: var(--text); font-size: var(--fs-s); }
+.lk-v { display: flex; gap: 10px; align-items: center; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--line-2); cursor: pointer; }
+.lk-v.on { border-color: rgba(var(--primary-rgb), .6); background: rgba(var(--primary-rgb), .07); }
+.lk-v.off { opacity: .5; cursor: not-allowed; } .lk-v small { margin-left: auto; color: var(--muted); }
+.lk-checks { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: var(--fs-xs); }
+.lk-checks li::before { content: '✓'; color: var(--primary); margin-right: 8px; } .lk-checks li.no::before { content: '✕'; color: var(--danger, #ff5d6c); } .lk-checks li.warn::before { content: '!'; color: var(--warn); }
+.lk-path { font-family: var(--mono, 'JetBrains Mono'); font-size: var(--fs-xs); word-break: break-all; padding: 8px 10px; border-radius: 8px; background: rgba(0, 0, 0, .3); }
+.lk-seg { display: flex; gap: 6px; flex-wrap: wrap; } .lk-seg label { flex-direction: row !important; align-items: center; gap: 6px !important; padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 9px; color: var(--text) !important; font-size: var(--fs-s) !important; cursor: pointer; }
+.lk-seg label:has(input:checked) { border-color: rgba(var(--primary-rgb), .6); background: rgba(var(--primary-rgb), .07); }
+.lk-note { margin: 0; } .lk-toast { margin-top: 10px; }
+</style>
+</head>
+<!-- M2 design preview of the Projects page "Link vault & settings" form (spec §26.6). Sample data only; nothing is read or saved. -->
+<body>
+<div class="lk-top"><h1>PROJECTS · LINK PREVIEW</h1>
+  <label class="muted sm">Scenario <select class="btn sm" id="lk-sc">
+    <option value="ok">Separate folder (OK)</option><option value="clash">Folder used by another project</option><option value="whole">Whole vault while shared</option><option value="nov">Not a vault</option><option value="od">OneDrive vault (warning)</option></select></label>
+  <button class="btn pri sm" id="lk-open">Open the form</button></div>
+<dialog class="lx-dlg pj-dlg" id="lk-dlg" aria-labelledby="lk-t"></dialog>
+<script type="module" src="js/projects-link-preview.js"></script>
+</body>
+</html>

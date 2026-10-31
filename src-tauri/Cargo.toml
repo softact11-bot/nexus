@@ -1,0 +1,25 @@
+[package]
+name = "nexus-app"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-single-instance = "2"
+serde_json = "1"
+winreg = "0.56"
+# M5b 1a (already in Cargo.lock through Tauri, no new download): HMAC-SHA256 tracker proof (B61), CSPRNG nonce, listener owner lookup
+sha2 = "0.10"
+getrandom = "0.3"
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_NetworkManagement_IpHelper", "Win32_Security", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging", "Win32_System_Console", "Win32_System_Pipes", "Win32_System_JobObjects"] }
+# M5c (already in Cargo.lock through wry): WebView2 memory target level + visibility while hidden in the tray
+webview2-com = "0.39"
+windows-core = "0.62"
+
+[features]
+# test builds only (m5a/m5a-test.js): opens a WebView2 DevTools port for measuring; never in a normal build
+m5a-test = []

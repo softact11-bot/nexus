@@ -1,0 +1,17 @@
+/* M7e Rearrange Mode (layout.js): a saved layout swaps the page's own grid for a 1-3 column flow; edit handles + bottom bar */
+.lx { grid-template-columns: repeat(var(--lc, 3), minmax(0, 1fr)) !important; grid-template-areas: none !important; grid-template-rows: none !important; height: auto !important; min-height: 0 !important; align-content: start !important; grid-auto-flow: row !important; }
+.lx > * { grid-area: auto !important; grid-column: span var(--w, 1) !important; order: var(--o, 0); min-height: var(--mh, auto); }
+.lx-btn { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; } .lx-btn .ic { width: 16px; height: 16px; }
+@media (max-width: 1200px) { .top-act .lx-btn span { display: none; } } /* small windows: icon only, the top bar keeps its width */
+.lx-edit > * { position: relative; outline: 1px dashed rgba(var(--primary-rgb), .45); outline-offset: 3px; }
+.lx-edit > .lx-drop { outline: 2px solid rgba(var(--primary-rgb), .95); background-color: rgba(var(--primary-rgb), .08); }
+.lx-edit > .lx-drag { opacity: .55; }
+.lx-edit > * > .lx-t { position: absolute !important; top: 6px; right: 6px; z-index: 20; display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: rgba(8, 12, 14, .88); border: 1px solid var(--line); }
+.lx-t button { min-width: 30px; min-height: 30px; padding: 0 6px; border-radius: 7px; border: 1px solid var(--line); background: transparent; color: var(--text, #e8f2ee); font: inherit; font-size: 12px; cursor: pointer; }
+.lx-t button:hover, .lx-t button:focus-visible { border-color: rgba(var(--primary-rgb), .8); outline: none; box-shadow: 0 0 0 2px rgba(var(--primary-rgb), .45); }
+.lx-grip { cursor: grab !important; touch-action: none; } .lx-drag .lx-grip { cursor: grabbing !important; }
+.lx-edit > * > .lx-rz { position: absolute !important; margin: 0 !important; right: -4px; bottom: -4px; z-index: 20; width: 22px; height: 22px; cursor: nwse-resize; touch-action: none; border-right: 3px solid rgba(var(--primary-rgb), .95); border-bottom: 3px solid rgba(var(--primary-rgb), .95); border-radius: 0 0 6px 0; }
+.lx-bar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 60; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-width: calc(100vw - 32px); padding: 10px 14px; border-radius: 14px; background: rgba(8, 12, 14, .94); border: 1px solid rgba(var(--primary-rgb), .5); box-shadow: 0 12px 40px rgba(0, 0, 0, .5); }
+.lx-tut { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 560px; color: var(--muted); }
+.lx-tut:empty { display: none; }
+.reduce .lx-bar, .reduce .lx-t { transition: none; }

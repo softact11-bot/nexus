@@ -1,0 +1,57 @@
+/* Design tokens: the one place for color, type, spacing, radius, elevation and motion. */
+:root {
+  color-scheme: dark;
+  /* surfaces */
+  --bg: #060908;
+  --bg-2: #0A0F0D;
+  --surface: linear-gradient(180deg, rgba(19, 26, 23, .86), rgba(10, 14, 12, .9));
+  --surface-solid: #0F1513;
+  --elevated: #161E1A;
+  --glass: linear-gradient(180deg, rgba(20, 28, 24, .62), rgba(9, 13, 11, .72));
+  --inset: rgba(255, 255, 255, .025);
+  --line: rgba(255, 255, 255, .07);
+  --line-2: rgba(255, 255, 255, .11);
+  --border: #2A3A32;
+  --border-soft: rgba(255, 255, 255, .07);
+  --hl: rgba(255, 255, 255, .06);
+  /* accent (theme) */
+  --primary: #31D67A;
+  --primary-rgb: 49, 214, 122;
+  --hover: #58E89B;
+  --pale: #A2F7C5;
+  --deep: #1E8F55;
+  --forest: #0E3B24;
+  /* text */
+  --text: #EAF6EE;
+  --muted: #94A99C;
+  --dim: #63786B;
+  /* semantic (never green) */
+  --warn: #F2B544;
+  --error: #F2555A;
+  --info: #5AB8F2;
+  /* token types */
+  --t-in: #A2F7C5;
+  --t-out: #31D67A;
+  --t-cw: #1E8F55;
+  --t-cr: #5AB8F2;
+  /* type */
+  --font: "Arial Rounded MT Bold", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  --display: "Orbitron", "Nunito", sans-serif;
+  /* scales with the window: base sizes at 1600 px wide, capped at 2560 */
+  --fs-xs: clamp(11.5px, .72vw, 14px); --fs-s: clamp(12.5px, .8vw, 15px); --fs-m: clamp(13.5px, .88vw, 16.5px); --fs-l: clamp(15px, .98vw, 18.5px);
+  --fs-xl: clamp(19px, 1.25vw, 24px); --fs-2xl: clamp(26px, 1.7vw, 34px); --fs-3xl: clamp(30px, 2vw, 40px);
+  /* space, radius, elevation */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 18px; --s5: 22px; --s6: 26px;
+  --r-s: 8px; --r-m: 14px; --r-l: 18px;
+  --shadow: inset 0 1px 0 var(--hl), 0 1px 2px rgba(0, 0, 0, .5), 0 18px 44px -12px rgba(0, 0, 0, .7);
+  --shadow-sm: inset 0 1px 0 rgba(255, 255, 255, .06), 0 1px 2px rgba(0, 0, 0, .45);
+  --glow: 0 0 18px rgba(var(--primary-rgb), .22);
+  /* motion */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --t-hover: 180ms; --t-press: 140ms; --t-page: 220ms; --t-count: 700ms;
+  --t-fade: 110ms; --t-ui: 180ms; --slide: 8px; /* page fade-out (--t-fade; --t-out is the Output token colour, B70), dialogs/menus, slide distance; main.js scales them from the anim.* prefs */
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --t-hover: 0ms; --t-press: 0ms; --t-page: 120ms; --t-count: 0ms; }
+}

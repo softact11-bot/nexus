@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/preview/">
+<title>Sync &amp; graph preview · NEXUS</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/themes.css">
+<style>
+body { display: block; height: auto; min-height: 100vh; min-width: 0; overflow: auto; padding: 22px 26px 40px; }
+.syn { position: relative; z-index: 1; max-width: 1500px; margin: 0 auto; display: grid; gap: 16px; }
+.syn-top { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.syn-top h1 { font: 600 18px var(--display); margin: 0 auto 0 0; letter-spacing: .06em; color: #F2FFF7; }
+.syn-ban { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(242, 181, 68, .45); background: rgba(242, 181, 68, .07); font-size: var(--fs-s); }
+.syn-ban b { color: var(--warn); letter-spacing: .06em; font-size: var(--fs-xs); }
+.syn-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 1180px) { .syn-row { grid-template-columns: minmax(0, 1fr); } }
+.syn-sec { display: grid; gap: 12px; }
+.syn-kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; font-size: var(--fs-s); margin: 0; }
+.syn-kv dt { color: var(--muted); } .syn-kv dd { margin: 0; min-width: 0; word-break: break-all; }
+.syn-path { font-family: var(--mono); font-size: var(--fs-xs); word-break: break-all; color: var(--ink-2, #D8E8DE); }
+.syn-src { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 9px; font-weight: 800; font-size: var(--fs-s); letter-spacing: .03em; border: 1px solid; }
+.syn-src.graphify { color: var(--info); border-color: rgba(90, 184, 242, .5); background: rgba(90, 184, 242, .08); }
+.syn-src.builtin { color: var(--primary); border-color: rgba(var(--primary-rgb), .5); background: rgba(var(--primary-rgb), .08); }
+.syn-src.fallback { color: var(--warn); border-color: rgba(242, 181, 68, .5); background: rgba(242, 181, 68, .08); }
+.syn-src.none { color: var(--muted); border-color: var(--line-2); }
+.syn-src i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+.syn-note { margin: 0; font-size: var(--fs-xs); color: var(--muted); }
+.syn-note.warn { color: var(--warn); }
+.lk-seg { display: flex; gap: 6px; flex-wrap: wrap; } .lk-seg label { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 9px; color: var(--text); font-size: var(--fs-s); cursor: pointer; }
+.lk-seg label.on, .lk-seg label:has(input:checked) { border-color: rgba(var(--primary-rgb), .6); background: rgba(var(--primary-rgb), .07); }
+.lk-seg label:has(input:disabled) { opacity: .45; cursor: not-allowed; }
+.syn-in { width: 100%; height: 34px; padding: 0 10px; border-radius: 9px; border: 1px solid var(--line-2); background: rgba(0, 0, 0, .25); color: var(--text); font: 500 var(--fs-xs) var(--mono); }
+.syn-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.syn-kpi { border: 1px solid var(--line-2); border-radius: 10px; padding: 10px 12px; cursor: pointer; background: rgba(255, 255, 255, .02); text-align: left; color: var(--text); font: inherit; }
+.syn-kpi.on { border-color: rgba(var(--primary-rgb), .6); background: rgba(var(--primary-rgb), .07); }
+.syn-kpi b { display: block; font: 700 22px var(--display); } .syn-kpi span { font-size: var(--fs-xs); color: var(--muted); }
+.syn-kpi[data-f=create] b { color: var(--info); } .syn-kpi[data-f=update] b { color: var(--primary); } .syn-kpi[data-f=same] b { color: var(--muted); } .syn-kpi[data-f=conflict] b { color: var(--warn); } .syn-kpi[data-f=refused] b { color: #ff7a8a; }
+.syn-tbl td { height: auto; padding: 9px 12px; white-space: normal; vertical-align: top; }
+.syn-tbl td.syn-ac { white-space: nowrap; }
+.syn-tbl td:nth-child(5), .syn-tbl th:nth-child(5) { display: table-cell; } /* pages.css hides column 5 at <=1500 px (Sessions table) */
+.syn-a { display: inline-block; padding: 2px 9px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; border: 1px solid currentColor; }
+.syn-a.create { color: var(--info); } .syn-a.update { color: var(--primary); } .syn-a.same { color: var(--muted); } .syn-a.conflict { color: var(--warn); } .syn-a.refused { color: #ff7a8a; }
+.syn-dir { font-family: var(--mono); font-size: var(--fs-xs); color: var(--pale); white-space: nowrap; }
+.syn-bk { font-size: var(--fs-xs); color: var(--muted); } .syn-bk.y { color: var(--primary); }
+.syn-why { font-size: var(--fs-xs); color: var(--muted); }
+.syn-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.syn-legend li { font-size: var(--fs-xs); color: var(--muted); border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; }
+.syn-legend li .syn-a { margin-right: 6px; }
+.syn-cfl { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 14px; }
+@media (max-width: 1180px) { .syn-cfl { grid-template-columns: minmax(0, 1fr); } }
+.syn-cl { display: grid; gap: 6px; align-content: start; }
+.syn-ci { text-align: left; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--line-2); background: rgba(255, 255, 255, .02); color: var(--text); font: inherit; font-size: var(--fs-s); cursor: pointer; display: grid; gap: 2px; }
+.syn-ci.on { border-color: rgba(242, 181, 68, .6); background: rgba(242, 181, 68, .07); } .syn-ci small { color: var(--muted); font-size: 11px; }
+.syn-ci .ch { color: var(--primary); }
+.syn-diff { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.syn-pane { min-width: 0; border: 1px solid var(--line-2); border-radius: 10px; overflow: hidden; }
+.syn-pane h4 { margin: 0; padding: 8px 12px; font-size: var(--fs-xs); background: rgba(255, 255, 255, .03); border-bottom: 1px solid var(--line-2); display: flex; gap: 8px; }
+.syn-pane h4 span { margin-left: auto; color: var(--muted); font-weight: 400; }
+.syn-pane pre { margin: 0; padding: 8px 0; font: 12px/1.55 var(--mono); max-height: 260px; overflow: auto; }
+.syn-pane pre div { padding: 0 12px; white-space: pre-wrap; word-break: break-word; min-height: 1.55em; }
+.syn-pane pre .add { background: rgba(var(--primary-rgb), .13); } .syn-pane pre .del { background: rgba(255, 93, 108, .14); }
+.syn-pane pre div::before { content: attr(data-n); display: inline-block; width: 26px; color: var(--dim, #5b6b62); }
+.syn-res { display: grid; gap: 8px; }
+.syn-res label { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--line-2); cursor: pointer; font-size: var(--fs-s); }
+.syn-res label.on, .syn-res label:has(input:checked) { border-color: rgba(var(--primary-rgb), .6); background: rgba(var(--primary-rgb), .07); }
+.syn-res label small { display: block; color: var(--muted); font-size: var(--fs-xs); }
+.syn-msg { margin: 0; font-size: var(--fs-s); color: var(--pale); min-height: 1.4em; }
+.syn-acts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.syn-empty { padding: 18px; text-align: center; color: var(--muted); font-size: var(--fs-s); border: 1px dashed var(--line-2); border-radius: 10px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+</style>
+</head>
+<!-- M3 gate (c) design preview: Knowledge page sync + graph controls (spec §26.7). Isolated sample data only: no fetch, nothing read, written or synced. -->
+<body>
+<main class="syn" id="syn"></main>
+<script type="module" src="js/sync-preview.js"></script>
+</body>
+</html>

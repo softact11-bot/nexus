@@ -1,0 +1,40 @@
+/* App-wide appearance + accessibility (Settings → Appearance, Accessibility; applied by js/look.js through html data-*). */
+:root { --ok: #31D67A; --hover: color-mix(in srgb, var(--primary) 72%, #fff); --pale: color-mix(in srgb, var(--primary) 45%, #fff); --deep: color-mix(in srgb, var(--primary) 62%, #000); --forest: color-mix(in srgb, var(--primary) 25%, #000); }
+body, .card, .btn, .side, .tab { transition: background-color var(--t-ui) var(--ease), color var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
+[data-theme="light"] { color-scheme: light; --bg: #EEF3F0; --bg-2: #F7FAF8; --surface: linear-gradient(180deg, #FFFFFF, #F6F9F7); --surface-solid: #FFFFFF; --elevated: #FFFFFF; --glass: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(246, 249, 247, .92));
+  --line: rgba(10, 40, 25, .1); --line-2: rgba(10, 40, 25, .16); --hl: rgba(255, 255, 255, .8); --text: #10241A; --muted: #4F6658; --dim: #6E8578;
+  --shadow: 0 1px 2px rgba(10, 40, 25, .08), 0 10px 30px -12px rgba(10, 40, 25, .18); --shadow-sm: 0 1px 2px rgba(10, 40, 25, .1); --pale: var(--deep);
+  --ink: var(--text); --ink-2: #24392D; } /* page CSS writes its bright text as var(--ink, #fff) / var(--ink-2, <light green>) */
+[data-theme="light"] body::before { background: radial-gradient(40% 40% at 55% 20%, rgba(var(--primary-rgb), .12), transparent 70%), linear-gradient(180deg, #F3F7F5, #E9F0EC); }
+[data-theme="light"] body::after { opacity: 0; }
+[data-theme="light"] :is(.pg-h h1, .card-h h2, .side .brand b, .nav-i.on, .btn:hover, .btn.pri) { color: var(--text); text-shadow: none; }
+[data-theme="light"] :is(.btn, .tab, .nav-i, .icon-btn, .sp-tiles button) { color: var(--text); background: linear-gradient(180deg, #fff, #F1F5F3); }
+[data-theme="light"] .btn.pri { background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 40%, #fff), color-mix(in srgb, var(--primary) 22%, #fff)); }
+[data-theme="light"] .tab.on { background: rgba(var(--primary-rgb), .16); }
+[data-theme="light"] .side { background: rgba(255, 255, 255, .75); border-color: var(--line); }
+[data-theme="light"] .sp-tog i::after { background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .3); }
+[data-theme="cyber"] { --bg: #07051A; --bg-2: #0D0A26; --surface: linear-gradient(180deg, rgba(24, 16, 58, .86), rgba(11, 8, 32, .9)); --surface-solid: #120D30; --elevated: #1A1342;
+  --glass: linear-gradient(180deg, rgba(26, 18, 64, .62), rgba(10, 7, 30, .72)); --line: rgba(160, 120, 255, .14); --line-2: rgba(160, 120, 255, .22); --text: #EEEAFF; --muted: #A49BD0; --dim: #7A70A8; }
+[data-theme="cyber"] body::before { background: radial-gradient(40% 40% at 70% 15%, rgba(224, 95, 208, .14), transparent 70%), radial-gradient(40% 40% at 20% 80%, rgba(46, 230, 214, .1), transparent 70%), linear-gradient(180deg, #0B0722, #05031A); }
+[data-bg="plain"] body::before, [data-bg="plain"] body::after { background: var(--bg); animation: none; }
+[data-bg="grid"] body::after { opacity: .6; animation: none; mask-image: radial-gradient(70% 70% at 55% 40%, #000, transparent);
+  background: linear-gradient(rgba(var(--primary-rgb), .07) 1px, transparent 1px) 0 0 / 44px 44px, linear-gradient(90deg, rgba(var(--primary-rgb), .07) 1px, transparent 1px) 0 0 / 44px 44px; }
+[data-bg="aurora"] body::after { opacity: .9; mask-image: none; background: radial-gradient(60% 30% at 30% 0%, rgba(var(--primary-rgb), .16), transparent 70%), radial-gradient(50% 30% at 80% 10%, rgba(122, 107, 255, .14), transparent 70%); }
+[data-layout="compact"] { --s3: 9px; --s4: 13px; --s5: 16px; } [data-layout="compact"] .pg, [data-layout="compact"] .sp-grid, [data-layout="compact"] .sp-mid { gap: 11px; } [data-layout="compact"] .sp-row { padding: 7px 0; }
+[data-layout="wide"] { --side: 196px; } [data-layout="wide"] .pg { max-width: none; }
+[data-contrast="1"] { --muted: #C9D8CE; --dim: #A9BDB1; --line: rgba(255, 255, 255, .2); --line-2: rgba(255, 255, 255, .3); }
+[data-contrast="1"][data-theme="light"] { --muted: #24392D; --dim: #34503F; --line: rgba(0, 0, 0, .28); --line-2: rgba(0, 0, 0, .4); }
+[data-focus="1"] :focus-visible { outline: 2px solid var(--primary) !important; outline-offset: 2px; }
+[data-theme="light"] .search { background: linear-gradient(180deg, #fff, #F1F5F3); }
+[data-theme="light"] .drop { background: rgba(255, 255, 255, .98); box-shadow: 0 24px 60px rgba(10, 40, 25, .2); }
+/* light: --primary / --ok / --warn / --error / --info arrive pre-darkened from look.js (4.5:1 on white); these are the hard-coded bright text colours */
+[data-theme="light"] :is(.chip.est, .tg.n, .st-warn, .sp-dirty, .ph .note, .cmp-t .up, .pg .up, .sv .down) { color: var(--warn) !important; }
+[data-theme="light"] :is(#k-waste .v, .wv, .sv-v, .pill.est, .o-v b, .cpill, .toast.warn, .banner, .st-rev) { color: #8A5A00 !important; text-shadow: none; }
+[data-theme="light"] :is(.kpi .v, .stat .val) { color: var(--primary); text-shadow: none; }
+[data-theme="light"] :is(.tg.c, .eff-top b) { color: #1F6FA8; text-shadow: none; }
+[data-theme="light"] :is(.tg.w, .st-bad) { color: #B3261E !important; } [data-theme="light"] .kg-tag { color: #6A3FC4; }
+[data-theme="light"] .pg.kg { --muted: #4F6658; --dim: #6E8578; } /* Knowledge's own pale greys are for its dark page */
+/* light: dark translucent wells (black at .14–.35 alpha) would turn grey on white */
+[data-theme="light"] :is(.tabs, .field, .pgb, .mini, .tgl, .rule, .ve > div, .ub, .lx-q, .px-c, .px-dt, .px-st, .px-r, .chip, input, select, textarea, .kg-s, .pj-q, .pj-r, .pj-box, .cat, .px-rvr, .px-grp, div:is(.st-ok, .st-warn, .st-bad, .st-unk, .st-rev)) { background-color: rgba(10, 40, 25, .045); }
+[data-theme="light"] .px-c { background-image: none; box-shadow: var(--shadow-sm); }
+[data-theme="light"] :is(.field, .search) input { background-color: transparent; }

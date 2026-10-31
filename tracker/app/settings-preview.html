@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/preview/">
+<title>Settings preview · NEXUS</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/settings-preview.css">
+</head>
+<!-- Design preview of the Settings page (Phase F). Isolated: settings.js is remapped to sandbox-settings.js (memory only). -->
+<body>
+<aside class="side">
+  <a class="brand" href="#/home" aria-label="NEXUS home">
+    <span class="brand-ring"><i></i></span>
+    <span><b>NEXUS</b><small>Claude Code Intelligence System</small></span>
+  </a>
+  <nav id="nav" aria-label="Pages"></nav>
+  <div class="side-foot"><span class="dot ok"></span><span id="side-state">Connecting…</span></div>
+</aside>
+<header class="top">
+  <div class="ctx"><b>Settings preview</b> · sandbox, your real settings are untouched</div>
+  <div></div>
+  <div class="top-act"></div>
+</header>
+<main id="page" class="page"></main>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs></defs>
+</svg>
+<script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.min.js","three/addons/":"./vendor/three/examples/jsm/","./js/settings.js":"./js/sandbox-settings.js"}}</script>
+<script type="module" src="js/settings-preview.js"></script>
+</body>
+</html>

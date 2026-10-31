@@ -1,0 +1,12 @@
+src-tauri/target/
+src-tauri/gen/
+m5a/out/
+m5b/out/
+releases/
+setup/gen/
+m7b/out/
+m7c/out/
+
+/package/
+*.zip
+node_modules/

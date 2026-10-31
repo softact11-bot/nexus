@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "NEXUS Setup",
+  "version": "0.0.1",
+  "identifier": "local.nexus.setup",
+  "build": { "frontendDist": "../setup-ui" },
+  "app": { "windows": [], "withGlobalTauri": true, "security": { "csp": null } },
+  "bundle": { "active": false, "icon": ["../src-tauri/icons/icon.ico"] }
+}

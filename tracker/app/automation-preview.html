@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="/preview/">
+<title>Automation preview · NEXUS</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/automation.css">
+</head>
+<!-- Design preview of the Automation page (Phase H, spec §23). GET only; every action stops at its confirm dialog; layout saved under jv.auto.preview. -->
+<body>
+<aside class="side">
+  <a class="brand" href="#/home" aria-label="NEXUS home">
+    <span class="brand-ring"><i></i></span>
+    <span><b>NEXUS</b><small>Claude Code Intelligence System</small></span>
+  </a>
+  <nav id="nav" aria-label="Pages"></nav>
+  <div class="side-foot"><span class="dot ok"></span><span id="side-state">Connecting…</span></div>
+</aside>
+<header class="top">
+  <div class="ctx"><b>Automation preview</b> · sandbox, nothing runs</div>
+  <div></div>
+  <div class="top-act"></div>
+</header>
+<main id="page" class="page"></main>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs><linearGradient id="ccg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#31D67A" stop-opacity=".35"/><stop offset="1" stop-color="#31D67A" stop-opacity="0"/></linearGradient></defs>
+</svg>
+<script type="module" src="js/automation-preview.js"></script>
+</body>
+</html>

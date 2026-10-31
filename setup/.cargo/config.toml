@@ -1,0 +1,3 @@
+# share the app's target folder: crates already built there are reused (no second full Tauri build)
+[build]
+target-dir = "../src-tauri/target"
